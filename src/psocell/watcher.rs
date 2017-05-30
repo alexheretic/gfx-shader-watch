@@ -106,6 +106,16 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
         self
     }
 
+    pub fn primitive(mut self, p: Primitive) -> WatcherPsoCellBuilder<I> {
+        self.primitive = p;
+        self
+    }
+
+    pub fn raterizer(mut self, r: state::Rasterizer) -> WatcherPsoCellBuilder<I> {
+        self.raterizer = r;
+        self
+    }
+
     pub fn build<R, F>(self, mut factory: F)
             -> Result<WatcherPsoCell<R, F, I>, Box<Error>>
             where R: Resources, F: Factory<R> {

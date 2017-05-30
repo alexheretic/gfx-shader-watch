@@ -58,6 +58,16 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         self
     }
 
+    pub fn primitive(mut self, p: Primitive) -> SimplePsoCellBuilder<I> {
+        self.primitive = p;
+        self
+    }
+
+    pub fn raterizer(mut self, r: state::Rasterizer) -> SimplePsoCellBuilder<I> {
+        self.raterizer = r;
+        self
+    }
+
     pub fn build<R, F>(self, mut factory: F)
             -> Result<SimplePsoCell<R, F, I>, Box<Error>>
             where R: Resources, F: Factory<R> {

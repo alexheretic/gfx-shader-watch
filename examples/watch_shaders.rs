@@ -8,6 +8,8 @@ use gfx::traits::FactoryExt;
 use gfx::Device;
 use gfx::format::{Rgba8, Depth};
 use gfx_shader_watch::*;
+use gfx::Primitive;
+use gfx::state::Rasterizer;
 
 gfx_defines!{
     vertex Vertex {
@@ -51,7 +53,9 @@ pub fn main() {
         pipe = trianglepipe,
         vertex_shader = "shader/vert.glsl",
         fragment_shader = "shader/frag.glsl",
-        factory = factory).expect("psocell");
+        factory = factory,
+        primitive = Primitive::TriangleList,
+        raterizer = Rasterizer::new_fill()).expect("psocell");
 
     let mut running = true;
     while running {
