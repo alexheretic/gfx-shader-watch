@@ -1,0 +1,22 @@
+[package]
+name = "gfx-shader-watch"
+version = "0.1.0"
+authors = ["Alex Butler <alexheretic@gmail.com>"]
+
+[dependencies]
+gfx = "0"
+log = "0"
+notify = "4"
+
+[dev-dependencies]
+gfx_window_glutin = "0"
+env_logger = "0"
+glutin = "0"
+
+[[example]]
+name = "watch-shaders"
+path = "examples/watch_shaders.rs"
+
+[[example]]
+name = "fragment-change"
+path = "examples/fragment_change.rs"
