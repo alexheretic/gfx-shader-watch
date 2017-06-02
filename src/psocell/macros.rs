@@ -19,8 +19,8 @@ macro_rules! debug_watcher_pso_cell {
         match Path::new(file!()).canonicalize() {
             Ok(path) => match path.parent().ok_or("Could not find current dir") {
                 Ok(dir) => {
-                    let vs = dir.join($vs);
-                    let fs = dir.join($fs);
+                    let vs = $vs.split("/").fold(dir.to_path_buf(), |path, s| path.join(s));
+                    let fs = $fs.split("/").fold(dir.to_path_buf(), |path, s| path.join(s));
                     WatcherPsoCellBuilder::using($pipe_name::new())
                         .vertex_shader(vs)
                         .fragment_shader(fs)
@@ -43,8 +43,8 @@ macro_rules! debug_watcher_pso_cell {
         match Path::new(file!()).canonicalize() {
             Ok(path) => match path.parent().ok_or("Could not find current dir") {
                 Ok(dir) => {
-                    let vs = dir.join($vs);
-                    let fs = dir.join($fs);
+                    let vs = $vs.split("/").fold(dir.to_path_buf(), |path, s| path.join(s));
+                    let fs = $fs.split("/").fold(dir.to_path_buf(), |path, s| path.join(s));
                     WatcherPsoCellBuilder::using($pipe_name::new())
                         .vertex_shader(vs)
                         .fragment_shader(fs)
