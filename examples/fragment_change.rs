@@ -37,7 +37,9 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 static FRAGMENT_SHADER: &str = include_str!("shader/frag.glsl");
 
 fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
-    let path = Path::new(file!()).canonicalize()?.parent().ok_or("no parent")?.join("shader/frag.glsl");
+    let path = Path::new(file!()).canonicalize()?
+        .parent().ok_or("no parent")?
+        .join("shader").join("frag.glsl");
     let mut shader = OpenOptions::new()
         .write(true)
         .open(path)?;
