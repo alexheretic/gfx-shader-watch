@@ -17,7 +17,7 @@ use gfx_shader_watch::*;
 
 gfx_defines!{
     vertex Vertex {
-        pos: [f32; 2] = "a_Pos",
+        pos: [f32; 2] = "pos",
     }
 
     pipeline trianglepipe {
@@ -68,6 +68,14 @@ pub fn main() {
         out: main_color
     };
 
+    // This object holds the pipeline state object and it's own factory
+    // accessed by pso_cell.pso() & pso_cell.factory()
+    // When compiled in debug mode it will watch the files "shader/vert.glsl" & "shader/frag.glsl"
+    // relative to this source file, if changed will try to re-create the pso on the next call to
+    // pso_cell.pso(). Thus the shaders a reloaded on the fly.
+    //
+    // When compiled in release mode the shaders are added using include_bytes! and no watcher is
+    // setup. The release PsoCell is simply a container for the one-time created pso & factory.
     let mut pso_cell = debug_watcher_pso_cell!(
         pipe = trianglepipe,
         vertex_shader = "shader/vert.glsl",
@@ -84,7 +92,7 @@ pub fn main() {
         device.cleanup();
     }
 
-    warn!("Modifying shader to color red...");
+    info!("Simulate developer modifying shader to color red...");
     overwrite_fragment_shader(&FRAGMENT_SHADER
         .replace("gl_FragColor = white;", "gl_FragColor = red;")).unwrap();
 
@@ -96,7 +104,7 @@ pub fn main() {
         device.cleanup();
     }
 
-    warn!("Modifying shader to color green...");
+    info!("Simulate developer modifying shader to color green...");
     overwrite_fragment_shader(&FRAGMENT_SHADER
         .replace("gl_FragColor = white;", "gl_FragColor = green;")).unwrap();
 
