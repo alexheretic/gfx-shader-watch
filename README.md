@@ -6,7 +6,7 @@ Tool for [gfx-rs](https://github.com/gfx-rs/gfx) providing a PsoCell container t
 * (Release mode) Includes shader file bytes at compile time
 
 Watching and auto-loading shader file changes allows faster development of shader code without full program restarts or re-compiles. However, when releasing a final binary it is more convenient to simply include the shader code in source.
-Hence, this library has the capability to automatically act appropriately in either mode.
+Naturaly this library can automatically act the desired way in either mode.
 
 ## How It Works
 There are two PsoCell variants `SimplePsoCell` & `WatcherPsoCell`, the former simply builds it's PipelineState once and
@@ -14,7 +14,7 @@ provides access. The latter refers to a shader source file that it will monitor,
 PipelineState on next access. To facilitate using `SimplePsoCell` in release mode, and `WatcherPsoCell` in debug mode
 the `debug_watcher_pso_cell!` & `debug_watcher_pso_cell_type!` macros are available.
 
-For example:
+Code example:
 ```rust
 pub fn main() {
     // ... setup window / gfx factory & pipeline etc
@@ -34,3 +34,6 @@ pub fn main() {
     }
 }
 ```
+
+## Examples
+Try running `cargo run --example watch-shaders` you should see a white triangle. Now open `examples/shader/frag.glsl` and modify it (ie change `gl_FragColor = white;` -> `gl_FragColor = red;`). You'll see the triangle shaded with the new code without the program reloading.
