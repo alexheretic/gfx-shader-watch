@@ -12,7 +12,7 @@ Tool for [gfx-rs](https://github.com/gfx-rs/gfx) providing a PsoCell container t
 * (Release mode) Includes shader file bytes at compile time
 
 Watching and auto-loading shader file changes allows faster development of shader code without full program restarts or re-compiles. However, when releasing a final binary it is more convenient to simply include the shader code in source.
-Naturaly this library can automatically act the desired way in either mode.
+Naturally this library can automatically act the desired way.
 
 ## How It Works
 There are two PsoCell variants `SimplePsoCell` & `WatcherPsoCell`, the former simply builds it's PipelineState once and
