@@ -23,7 +23,7 @@ pub fn main() {
     // if you need to refer to the type, use the `debug_watcher_pso_cell_type!` macro
     let mut pso_cell = debug_watcher_pso_cell!(
         pipe = mypipeline,
-        vertex_shader = "shader/vert.glsl", // relative to this r file
+        vertex_shader = "shader/vert.glsl", // relative to this file
         fragment_shader = "shader/frag.glsl",
         factory = factory).expect("psocell");
 
