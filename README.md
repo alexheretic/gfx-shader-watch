@@ -1,5 +1,11 @@
-Gfx Shader Watch
+gfx_shader_watch
 ================
+<a href="https://crates.io/crates/gfx_shader_watch">
+  <img src="http://img.shields.io/crates/v/gfx_shader_watch.svg" alt = "gfx_shader_watch on crates.io">
+</a>
+<a href="https://docs.rs/gfx_shader_watch">
+  <img src="https://docs.rs/gfx_shader_watch/badge.svg" alt="Documentation on docs.rs">
+</a>
 
 Tool for [gfx-rs](https://github.com/gfx-rs/gfx) providing a PsoCell container that:
 * (Debug mode) Watches for shader file changes and reloads automatically
