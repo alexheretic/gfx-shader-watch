@@ -16,6 +16,7 @@ fn shader_bytes(path: &PathBuf) -> Result<Vec<u8>, Box<Error>> {
     Ok(shader)
 }
 
+/// Container that watches shader files and reloads pipeline state object after modification
 pub struct WatcherPsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     vertex_shader: PathBuf,
     fragment_shader: PathBuf,
@@ -76,6 +77,7 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> PsoCell<R, F, I>
     }
 }
 
+/// Builds `WatcherPsoCell`
 #[derive(Debug)]
 pub struct WatcherPsoCellBuilder<I: pso::PipelineInit> {
     vertex_shader: Option<PathBuf>,

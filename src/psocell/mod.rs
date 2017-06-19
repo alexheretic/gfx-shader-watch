@@ -7,11 +7,13 @@ use gfx::traits::FactoryExt;
 use gfx::*;
 use std::error::Error;
 
+/// Container for pipeline state object and a factory
 pub trait PsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     fn pso(&mut self) -> &mut PipelineState<R, I::Meta>;
     fn factory(&mut self) -> &mut F;
 }
 
+/// Container with compile time shader source, pipeline state is build on initialisation
 #[derive(Debug)]
 pub struct SimplePsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     pso: PipelineState<R, I::Meta>,
@@ -28,6 +30,7 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit> PsoCell<R, F, I> for Sim
     }
 }
 
+/// Builds `SimplePsoCell`
 #[derive(Debug)]
 pub struct SimplePsoCellBuilder<I: pso::PipelineInit> {
     vertex_shader: Option<Vec<u8>>,
