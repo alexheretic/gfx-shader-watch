@@ -1,9 +1,9 @@
 gfx_shader_watch
 <a href="https://crates.io/crates/gfx_shader_watch">
-  <img src="http://img.shields.io/crates/v/gfx_shader_watch.svg" alt = "gfx_shader_watch on crates.io">
+  <img src="http://img.shields.io/crates/v/gfx_shader_watch.svg">
 </a>
 <a href="https://docs.rs/gfx_shader_watch">
-  <img src="https://docs.rs/gfx_shader_watch/badge.svg" alt="Documentation on docs.rs">
+  <img src="https://docs.rs/gfx_shader_watch/badge.svg">
 </a>
 ================
 
