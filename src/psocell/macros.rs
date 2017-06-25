@@ -14,12 +14,35 @@ macro_rules! debug_watcher_pso_cell_type {
 /// The type itself can be attained similarly with the `debug_watcher_pso_cell_type` macro
 ///
 /// # Examples
-/// ```
-/// let mut pso_cell = debug_watcher_pso_cell!(
-///     pipe = mypipeline,
-///     vertex_shader = "shader/vert.glsl", // relative to this file
-///     fragment_shader = "shader/frag.glsl",
-///     factory = factory).expect("psocell");
+/// ```rust,no_run
+/// #[macro_use] extern crate gfx;
+/// #[macro_use] extern crate gfx_shader_watch;
+/// # extern crate gfx_window_glutin;
+/// # extern crate glutin;
+/// # use gfx::format::{Rgba8, Depth};
+///
+/// gfx_defines!{
+///     pipeline mypipeline {
+///         out: gfx::RenderTarget<gfx::format::Rgba8> = "Target0",
+///     }
+/// }
+///
+/// pub fn main() {
+///    // {code initialising a gfx `factory`}
+///    # let events_loop = glutin::EventsLoop::new();
+///    # let builder = glutin::WindowBuilder::new()
+///    #     .with_title("Triangle".to_string())
+///    #     .with_dimensions(1024, 768)
+///    #     .with_vsync();
+///    # let (_window, mut _device, factory, _main_color, _main_depth) =
+///    #    gfx_window_glutin::init::<Rgba8, Depth>(builder, &events_loop);
+///
+///    let mut _pso_cell = debug_watcher_pso_cell!(
+///        pipe = mypipeline,
+///        vertex_shader = "shader/vert.glsl", // relative to this file
+///        fragment_shader = "shader/frag.glsl",
+///        factory = factory).expect("psocell");
+/// }
 /// ```
 #[cfg(debug_assertions)]
 #[macro_export]
