@@ -22,21 +22,31 @@ the `debug_watcher_pso_cell!` & `debug_watcher_pso_cell_type!` macros are availa
 
 Code example:
 ```rust
+#[macro_use] extern crate gfx;
+#[macro_use] extern crate gfx_shader_watch;
+
+use gfx_shader_watch::*;
+use gfx::Primitive;
+use gfx::state::Rasterizer;
+
 pub fn main() {
-    // ... setup window / gfx factory & pipeline etc
+    // {code to setup window / gfx factory etc }
 
     // Container has SimplePsoCell or WatcherPsoCell type, depending on compile mode
     // if you need to refer to the type, use the `debug_watcher_pso_cell_type!` macro
     let mut pso_cell = debug_watcher_pso_cell!(
         pipe = mypipeline,
-        vertex_shader = "shader/vert.glsl", // relative to this file
+        vertex_shader = "shader/vert.glsl",
         fragment_shader = "shader/frag.glsl",
-        factory = factory).expect("psocell");
+        factory = factory,
+        primitive = Primitive::TriangleList,
+        raterizer = Rasterizer::new_fill()).expect("psocell");
 
-    loop {
-      // ...
-      encoder.draw(&slice, pso_cell.pso(), &data);
-      // ...
+    let mut running = true;
+    while running {
+        // ...
+        encoder.draw(&slice, pso_cell.pso(), &data);
+        // ...
     }
 }
 ```
