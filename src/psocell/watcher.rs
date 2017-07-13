@@ -35,14 +35,25 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> WatcherPsoCell<R
         where R: Resources,
               F: Factory<R>
     {
-        if let Ok(notify::DebouncedEvent::NoticeWrite(path)) = self.shader_mods.try_recv() {
-            match self.build_pso() {
-                Ok(pso) => {
-                    info!("{:?} changed", path);
-                    return Some(pso);
-                },
-                Err(err) => error!("{:?}", err),
-            };
+        if let Ok(event) = self.shader_mods.try_recv() {
+            match event {
+                notify::DebouncedEvent::Create(path) |
+                notify::DebouncedEvent::NoticeWrite(path) => {
+                    if path != self.vertex_shader &&
+                       path != self.fragment_shader {
+                           return None;
+                    }
+
+                    match self.build_pso() {
+                        Ok(pso) => {
+                            info!("{:?} changed", path);
+                            return Some(pso);
+                        },
+                        Err(err) => error!("{:?}", err),
+                    };
+                }
+                _ => {}
+            }
         }
         None
     }
@@ -126,10 +137,14 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
         let pso = {
             let vs = self.vertex_shader.as_ref().ok_or("missing vertex shader")?;
             let fs = self.fragment_shader.as_ref().ok_or("missing fragment shader")?;
+            let vs_dir = vs.parent().unwrap_or(vs);
+            let fs_dir = vs.parent().unwrap_or(fs);
 
             debug!("Watching {:?}", &[vs, fs]);
-            watcher.watch(vs, notify::RecursiveMode::NonRecursive)?;
-            watcher.watch(fs, notify::RecursiveMode::NonRecursive)?;
+            watcher.watch(vs_dir, notify::RecursiveMode::NonRecursive)?;
+            if fs_dir != vs_dir {
+                watcher.watch(fs_dir, notify::RecursiveMode::NonRecursive)?;
+            }
 
             let fragment_shader = shader_bytes(fs)?;
             let vertex_shader = shader_bytes(vs)?;
