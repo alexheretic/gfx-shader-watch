@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cargo test
+
 echo "Debug mode: fragment file changes cause reloaded PSOs"
 RUST_LOG=gfx_shader_watch=debug cargo run --example fragment-change
 

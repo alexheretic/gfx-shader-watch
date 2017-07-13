@@ -1,9 +1,9 @@
 #[macro_use] extern crate log;
 #[macro_use] extern crate gfx;
+#[macro_use] extern crate gfx_shader_watch;
 extern crate gfx_window_glutin;
 extern crate glutin;
 extern crate env_logger;
-#[macro_use] extern crate gfx_shader_watch;
 
 use std::time::*;
 use std::path::Path;
