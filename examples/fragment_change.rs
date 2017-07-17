@@ -5,6 +5,7 @@ extern crate gfx_window_glutin;
 extern crate glutin;
 extern crate env_logger;
 
+use glutin::GlContext;
 use std::time::*;
 use std::path::Path;
 use std::error::Error;
@@ -53,12 +54,13 @@ pub fn main() {
     env_logger::init().unwrap();
 
     let events_loop = glutin::EventsLoop::new();
-    let builder = glutin::WindowBuilder::new()
+    let window_builder = glutin::WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_dimensions(1024, 768)
-        .with_vsync();
+        .with_dimensions(1024, 768);
+    let context = glutin::ContextBuilder::new()
+        .with_vsync(true);
     let (window, mut device, mut factory, main_color, _main_depth) =
-        gfx_window_glutin::init::<Rgba8, Depth>(builder, &events_loop);
+        gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop);
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 

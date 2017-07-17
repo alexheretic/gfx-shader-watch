@@ -19,6 +19,7 @@ macro_rules! debug_watcher_pso_cell_type {
 /// #[macro_use] extern crate gfx_shader_watch;
 /// # extern crate gfx_window_glutin;
 /// # extern crate glutin;
+/// # use glutin::GlContext;
 /// # use gfx::format::{Rgba8, Depth};
 ///
 /// gfx_defines!{
@@ -30,12 +31,10 @@ macro_rules! debug_watcher_pso_cell_type {
 /// pub fn main() {
 ///    // {code initialising a gfx `factory`}
 ///    # let events_loop = glutin::EventsLoop::new();
-///    # let builder = glutin::WindowBuilder::new()
-///    #     .with_title("Triangle".to_string())
-///    #     .with_dimensions(1024, 768)
-///    #     .with_vsync();
-///    # let (_window, mut _device, factory, _main_color, _main_depth) =
-///    #    gfx_window_glutin::init::<Rgba8, Depth>(builder, &events_loop);
+///    # let window_builder = glutin::WindowBuilder::new();
+///    # let context = glutin::ContextBuilder::new();
+///    # let (_window, mut _device, mut factory, _main_color, _main_depth) =
+///    #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop);
 ///
 ///    let mut _pso_cell = debug_watcher_pso_cell!(
 ///        pipe = mypipeline,

@@ -13,9 +13,9 @@ log = "0.3"
 notify = "4"
 
 [dev-dependencies]
-gfx_window_glutin = "0.16"
+gfx_window_glutin = "0.17"
 env_logger = "0.4"
-glutin = "0.8"
+glutin = "0.9"
 
 [[example]]
 name = "watch-shaders"
