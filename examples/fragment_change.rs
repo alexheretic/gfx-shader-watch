@@ -7,6 +7,7 @@ extern crate env_logger;
 
 use glutin::GlContext;
 use std::time::*;
+use std::env;
 use std::path::Path;
 use std::error::Error;
 use std::fs::OpenOptions;
@@ -52,6 +53,12 @@ fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
 
 pub fn main() {
     env_logger::init().unwrap();
+    if cfg!(target_os = "linux") {
+        // winit wayland is currently still wip
+        if env::var("WINIT_UNIX_BACKEND").is_err() {
+            env::set_var("WINIT_UNIX_BACKEND", "x11");
+        }
+    }
 
     let events_loop = glutin::EventsLoop::new();
     let window_builder = glutin::WindowBuilder::new()

@@ -4,6 +4,7 @@ extern crate gfx_window_glutin;
 extern crate glutin;
 extern crate env_logger;
 
+use std::env;
 use glutin::GlContext;
 use gfx::traits::FactoryExt;
 use gfx::Device;
@@ -33,6 +34,12 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 
 pub fn main() {
     env_logger::init().unwrap();
+    if cfg!(target_os = "linux") {
+        // winit wayland is currently still wip
+        if env::var("WINIT_UNIX_BACKEND").is_err() {
+            env::set_var("WINIT_UNIX_BACKEND", "x11");
+        }
+    }
 
     let mut events_loop = glutin::EventsLoop::new();
     let window_builder = glutin::WindowBuilder::new()
