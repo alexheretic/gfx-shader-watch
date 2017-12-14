@@ -138,7 +138,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             let vs = self.vertex_shader.as_ref().ok_or("missing vertex shader")?;
             let fs = self.fragment_shader.as_ref().ok_or("missing fragment shader")?;
             let vs_dir = vs.parent().unwrap_or(vs);
-            let fs_dir = vs.parent().unwrap_or(fs);
+            let fs_dir = fs.parent().unwrap_or(fs);
 
             debug!("Watching {:?}", &[vs, fs]);
             watcher.watch(vs_dir, notify::RecursiveMode::NonRecursive)?;

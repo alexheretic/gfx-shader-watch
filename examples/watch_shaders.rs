@@ -34,11 +34,10 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 
 pub fn main() {
     env_logger::init().unwrap();
-    if cfg!(target_os = "linux") {
-        // winit wayland is currently still wip
-        if env::var("WINIT_UNIX_BACKEND").is_err() {
-            env::set_var("WINIT_UNIX_BACKEND", "x11");
-        }
+
+    // winit select x11 by default
+    if cfg!(target_os = "linux") && env::var("WINIT_UNIX_BACKEND").is_err() {
+        env::set_var("WINIT_UNIX_BACKEND", "x11");
     }
 
     let mut events_loop = glutin::EventsLoop::new();

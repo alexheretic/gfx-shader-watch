@@ -1,6 +1,6 @@
 
-/// Returns WatcherPsoCell type when compiled in debug mode,
-/// SimplePsoCell type when compiled in release mode
+/// Returns `WatcherPsoCell` type when compiled in debug mode,
+/// `SimplePsoCell` type when compiled in release mode
 /// Type will match that returned by `debug_watcher_pso_cell` macro
 #[cfg(debug_assertions)]
 #[macro_export]
@@ -9,8 +9,8 @@ macro_rules! debug_watcher_pso_cell_type {
         (WatcherPsoCell<$r_type, $f_type, $pipe_name::Init<'static>>)
 }
 
-/// Returns WatcherPsoCell instance when compiled in debug mode,
-/// SimplePsoCell instance when compiled in release mode
+/// Returns `WatcherPsoCell` instance when compiled in debug mode,
+/// `SimplePsoCell` instance when compiled in release mode
 /// The type itself can be attained similarly with the `debug_watcher_pso_cell_type` macro
 ///
 /// # Examples
