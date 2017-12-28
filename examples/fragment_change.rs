@@ -52,8 +52,8 @@ fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
 }
 
 pub fn main() {
-    env_logger::init().unwrap();
-    
+    env_logger::init();
+
     // winit select x11 by default
     if cfg!(target_os = "linux") && env::var("WINIT_UNIX_BACKEND").is_err() {
         env::set_var("WINIT_UNIX_BACKEND", "x11");
