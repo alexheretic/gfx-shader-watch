@@ -84,7 +84,7 @@ pub fn main() {
                             .. },
                         ..
                     } |
-                    glutin::WindowEvent::Closed => running = false,
+                    glutin::WindowEvent::CloseRequested => running = false,
                     _ => {},
                 }
             }
