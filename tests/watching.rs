@@ -1,4 +1,5 @@
-#[macro_use] extern crate gfx;
+#[macro_use]
+extern crate gfx;
 // #[macro_use] extern crate gfx_shader_watch;
 // extern crate gfx_window_glutin;
 // extern crate glutin;

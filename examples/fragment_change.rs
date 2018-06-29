@@ -1,21 +1,24 @@
-#[macro_use] extern crate log;
-#[macro_use] extern crate gfx;
-#[macro_use] extern crate gfx_shader_watch;
+#[macro_use]
+extern crate log;
+#[macro_use]
+extern crate gfx;
+#[macro_use]
+extern crate gfx_shader_watch;
+extern crate env_logger;
 extern crate gfx_window_glutin;
 extern crate glutin;
-extern crate env_logger;
 
+use gfx::format::{Depth, Rgba8};
+use gfx::traits::FactoryExt;
+use gfx::Device;
+use gfx_shader_watch::*;
 use glutin::GlContext;
-use std::time::*;
 use std::env;
-use std::path::Path;
 use std::error::Error;
 use std::fs::OpenOptions;
 use std::io::Write;
-use gfx::traits::FactoryExt;
-use gfx::Device;
-use gfx::format::{Rgba8, Depth};
-use gfx_shader_watch::*;
+use std::path::Path;
+use std::time::*;
 
 gfx_defines!{
     vertex Vertex {
@@ -29,9 +32,9 @@ gfx_defines!{
 }
 
 const TRIANGLE: [Vertex; 3] = [
-    Vertex { pos: [ -0.5, -0.5 ] },
-    Vertex { pos: [  0.5, -0.5 ] },
-    Vertex { pos: [  0.0,  0.5 ] }
+    Vertex { pos: [-0.5, -0.5] },
+    Vertex { pos: [0.5, -0.5] },
+    Vertex { pos: [0.0, 0.5] },
 ];
 
 const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
@@ -40,18 +43,19 @@ static FRAGMENT_SHADER: &str = include_str!("shader/frag.glsl");
 
 /// Emulates a manual change of a shader contents, ie the dev changing the shader code
 fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
-    let path = Path::new(file!()).canonicalize()?
-        .parent().ok_or("no parent")?
-        .join("shader").join("frag.glsl");
-    let mut shader = OpenOptions::new()
-        .write(true)
-        .open(path)?;
+    let path = Path::new(file!())
+        .canonicalize()?
+        .parent()
+        .ok_or("no parent")?
+        .join("shader")
+        .join("frag.glsl");
+    let mut shader = OpenOptions::new().write(true).open(path)?;
     shader.set_len(0)?;
     shader.write_all(new_contents.as_bytes())?;
     Ok(())
 }
 
-pub fn main() {
+pub fn main() -> Result<(), Box<Error>> {
     env_logger::init();
 
     // winit select x11 by default
@@ -62,9 +66,8 @@ pub fn main() {
     let events_loop = glutin::EventsLoop::new();
     let window_builder = glutin::WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_dimensions(1024, 768);
-    let context = glutin::ContextBuilder::new()
-        .with_vsync(true);
+        .with_dimensions((1024, 768).into());
+    let context = glutin::ContextBuilder::new().with_vsync(true);
     let (window, mut device, mut factory, main_color, _main_depth) =
         gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop);
 
@@ -73,7 +76,7 @@ pub fn main() {
     let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&TRIANGLE, ());
     let data = trianglepipe::Data {
         vbuf: vertex_buffer,
-        out: main_color
+        out: main_color,
     };
 
     // This object holds the pipeline state object and it's own factory
@@ -88,7 +91,8 @@ pub fn main() {
         pipe = trianglepipe,
         vertex_shader = "shader/vert.glsl",
         fragment_shader = "shader/frag.glsl",
-        factory = factory).expect("psocell");
+        factory = factory
+    )?;
 
     let start = Instant::now();
     let show_duration = Duration::from_millis(333);
@@ -96,33 +100,37 @@ pub fn main() {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window.swap_buffers().unwrap();
+        window.swap_buffers()?;
         device.cleanup();
     }
 
     info!("Simulate developer modifying shader to color red...");
-    overwrite_fragment_shader(&FRAGMENT_SHADER
-        .replace("gl_FragColor = white;", "gl_FragColor = red;")).unwrap();
+    overwrite_fragment_shader(
+        &FRAGMENT_SHADER.replace("gl_FragColor = white;", "gl_FragColor = red;"),
+    )?;
 
     while Instant::now().duration_since(start) < show_duration * 2 {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window.swap_buffers().unwrap();
+        window.swap_buffers()?;
         device.cleanup();
     }
 
     info!("Simulate developer modifying shader to color green...");
-    overwrite_fragment_shader(&FRAGMENT_SHADER
-        .replace("gl_FragColor = white;", "gl_FragColor = green;")).unwrap();
+    overwrite_fragment_shader(
+        &FRAGMENT_SHADER.replace("gl_FragColor = white;", "gl_FragColor = green;"),
+    )?;
 
     while Instant::now().duration_since(start) < show_duration * 3 {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window.swap_buffers().unwrap();
+        window.swap_buffers()?;
         device.cleanup();
     }
 
-    overwrite_fragment_shader(FRAGMENT_SHADER).unwrap();
+    overwrite_fragment_shader(FRAGMENT_SHADER)?;
+
+    Ok(())
 }

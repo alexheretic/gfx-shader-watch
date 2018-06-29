@@ -1,5 +1,6 @@
 mod watcher;
-#[macro_use] pub mod macros;
+#[macro_use]
+pub mod macros;
 
 pub use psocell::watcher::{WatcherPsoCell, WatcherPsoCellBuilder};
 
@@ -20,7 +21,9 @@ pub struct SimplePsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     factory: F,
 }
 
-impl<R: Resources, F: Factory<R>, I: pso::PipelineInit> PsoCell<R, F, I> for SimplePsoCell<R, F, I> {
+impl<R: Resources, F: Factory<R>, I: pso::PipelineInit> PsoCell<R, F, I>
+    for SimplePsoCell<R, F, I>
+{
     fn pso(&mut self) -> &mut PipelineState<R, I::Meta> {
         &mut self.pso
     }
@@ -71,19 +74,15 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         self
     }
 
-    pub fn build<R, F>(self, mut factory: F)
-            -> Result<SimplePsoCell<R, F, I>, Box<Error>>
-            where R: Resources, F: Factory<R> {
+    pub fn build<R, F>(self, mut factory: F) -> Result<SimplePsoCell<R, F, I>, Box<Error>>
+    where
+        R: Resources,
+        F: Factory<R>,
+    {
         let vs = self.vertex_shader.ok_or("missing vertex shader")?;
         let fs = self.fragment_shader.ok_or("missing fragment shader")?;
         let set = factory.create_shader_set(&vs, &fs)?;
-        let pso = factory.create_pipeline_state(&set,
-                                        self.primitive,
-                                        self.raterizer,
-                                        self.init)?;
-        Ok(SimplePsoCell {
-            factory,
-            pso,
-        })
+        let pso = factory.create_pipeline_state(&set, self.primitive, self.raterizer, self.init)?;
+        Ok(SimplePsoCell { factory, pso })
     }
 }

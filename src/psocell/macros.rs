@@ -1,4 +1,3 @@
-
 /// Returns `WatcherPsoCell` type when compiled in debug mode,
 /// `SimplePsoCell` type when compiled in release mode
 /// Type will match that returned by `debug_watcher_pso_cell` macro
