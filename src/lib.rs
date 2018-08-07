@@ -35,7 +35,7 @@
 //!     # let mut events_loop = glutin::EventsLoop::new();
 //!     # let window_builder = glutin::WindowBuilder::new()
 //!     #     .with_title("Triangle".to_string())
-//!     #     .with_dimensions(1024, 768);
+//!     #     .with_dimensions((1024, 768).into());
 //!     # let context = glutin::ContextBuilder::new()
 //!     #     .with_vsync(true);
 //!     # let (window, mut device, mut factory, main_color, _main_depth) =
