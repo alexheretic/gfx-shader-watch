@@ -24,10 +24,11 @@ pub struct SimplePsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
 impl<R: Resources, F: Factory<R>, I: pso::PipelineInit> PsoCell<R, F, I>
     for SimplePsoCell<R, F, I>
 {
+    #[inline]
     fn pso(&mut self) -> &mut PipelineState<R, I::Meta> {
         &mut self.pso
     }
-
+    #[inline]
     fn factory(&mut self) -> &mut F {
         &mut self.factory
     }
@@ -39,7 +40,7 @@ pub struct SimplePsoCellBuilder<I: pso::PipelineInit> {
     vertex_shader: Option<Vec<u8>>,
     fragment_shader: Option<Vec<u8>>,
     primitive: Primitive,
-    raterizer: state::Rasterizer,
+    rasterizer: state::Rasterizer,
     init: I,
 }
 
@@ -50,7 +51,7 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
             fragment_shader: None,
             init: init_struct,
             primitive: Primitive::TriangleList,
-            raterizer: state::Rasterizer::new_fill(),
+            rasterizer: state::Rasterizer::new_fill(),
         }
     }
 
@@ -69,8 +70,8 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         self
     }
 
-    pub fn raterizer(mut self, r: state::Rasterizer) -> SimplePsoCellBuilder<I> {
-        self.raterizer = r;
+    pub fn rasterizer(mut self, r: state::Rasterizer) -> SimplePsoCellBuilder<I> {
+        self.rasterizer = r;
         self
     }
 
@@ -82,7 +83,8 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         let vs = self.vertex_shader.ok_or("missing vertex shader")?;
         let fs = self.fragment_shader.ok_or("missing fragment shader")?;
         let set = factory.create_shader_set(&vs, &fs)?;
-        let pso = factory.create_pipeline_state(&set, self.primitive, self.raterizer, self.init)?;
+        let pso =
+            factory.create_pipeline_state(&set, self.primitive, self.rasterizer, self.init)?;
         Ok(SimplePsoCell { factory, pso })
     }
 }

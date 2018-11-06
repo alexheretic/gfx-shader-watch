@@ -22,7 +22,7 @@ pub struct WatcherPsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     fragment_shader: PathBuf,
     init: I,
     primitive: Primitive,
-    raterizer: state::Rasterizer,
+    rasterizer: state::Rasterizer,
     _watcher: notify::RecommendedWatcher,
     shader_mods: mpsc::Receiver<notify::DebouncedEvent>,
 
@@ -73,7 +73,7 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> WatcherPsoCell<R
         Ok(self.factory.create_pipeline_state(
             &set,
             self.primitive,
-            self.raterizer,
+            self.rasterizer,
             self.init.clone(),
         )?)
     }
@@ -100,7 +100,7 @@ pub struct WatcherPsoCellBuilder<I: pso::PipelineInit> {
     vertex_shader: Option<PathBuf>,
     fragment_shader: Option<PathBuf>,
     primitive: Primitive,
-    raterizer: state::Rasterizer,
+    rasterizer: state::Rasterizer,
     init: I,
 }
 
@@ -111,7 +111,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             fragment_shader: None,
             init: init_struct,
             primitive: Primitive::TriangleList,
-            raterizer: state::Rasterizer::new_fill(),
+            rasterizer: state::Rasterizer::new_fill(),
         }
     }
 
@@ -130,8 +130,8 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
         self
     }
 
-    pub fn raterizer(mut self, r: state::Rasterizer) -> WatcherPsoCellBuilder<I> {
-        self.raterizer = r;
+    pub fn rasterizer(mut self, r: state::Rasterizer) -> WatcherPsoCellBuilder<I> {
+        self.rasterizer = r;
         self
     }
 
@@ -160,7 +160,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             let fragment_shader = shader_bytes(fs)?;
             let vertex_shader = shader_bytes(vs)?;
             let set = factory.create_shader_set(&vertex_shader, &fragment_shader)?;
-            factory.create_pipeline_state(&set, self.primitive, self.raterizer, self.init.clone())?
+            factory.create_pipeline_state(&set, self.primitive, self.rasterizer, self.init.clone())?
         };
 
         Ok(WatcherPsoCell {
@@ -168,7 +168,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             fragment_shader: self.fragment_shader.ok_or("missing fragment shader")?,
             init: self.init,
             primitive: self.primitive,
-            raterizer: self.raterizer,
+            rasterizer: self.rasterizer,
             _watcher: watcher,
             shader_mods,
 

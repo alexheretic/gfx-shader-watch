@@ -2,7 +2,6 @@
 extern crate log;
 #[macro_use]
 extern crate gfx;
-#[macro_use]
 extern crate gfx_shader_watch;
 extern crate env_logger;
 extern crate gfx_window_glutin;

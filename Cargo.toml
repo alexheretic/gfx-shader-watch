@@ -1,6 +1,6 @@
 [package]
 name = "gfx_shader_watch"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 description = "GFX Utility for watching shaders and reloading pipeline state on the fly"
 repository = "https://github.com/alexheretic/gfx-shader-watch"

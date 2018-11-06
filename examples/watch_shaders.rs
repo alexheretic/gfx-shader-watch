@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate gfx;
-#[macro_use]
 extern crate gfx_shader_watch;
 extern crate env_logger;
 extern crate gfx_window_glutin;
@@ -73,7 +72,7 @@ pub fn main() -> Result<(), Box<Error>> {
         fragment_shader = "shader/frag.glsl",
         factory = factory,
         primitive = Primitive::TriangleList,
-        raterizer = Rasterizer::new_fill()
+        rasterizer = Rasterizer::new_fill()
     )?;
 
     let mut running = true;

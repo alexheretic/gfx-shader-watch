@@ -55,7 +55,7 @@
 //!         fragment_shader = "shader/frag.glsl",
 //!         factory = factory,
 //!         primitive = Primitive::TriangleList,
-//!         raterizer = Rasterizer::new_fill()).expect("psocell");
+//!         rasterizer = Rasterizer::new_fill()).expect("psocell");
 //!
 //!     let mut running = true;
 //!     while running {
