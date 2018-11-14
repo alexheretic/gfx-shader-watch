@@ -11,7 +11,6 @@ use gfx::format::{Depth, Rgba8};
 use gfx::traits::FactoryExt;
 use gfx::Device;
 use gfx_shader_watch::*;
-use glutin::GlContext;
 use std::env;
 use std::error::Error;
 use std::fs::OpenOptions;

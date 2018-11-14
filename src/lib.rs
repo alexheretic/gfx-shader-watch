@@ -8,7 +8,6 @@
 //! # extern crate gfx_window_glutin;
 //! # extern crate glutin;
 //!
-//! # use glutin::GlContext;
 //! # use gfx::traits::FactoryExt;
 //! # use gfx::Device;
 //! # use gfx::format::{Rgba8, Depth};

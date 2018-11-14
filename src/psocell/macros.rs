@@ -18,7 +18,6 @@ macro_rules! debug_watcher_pso_cell_type {
 /// #[macro_use] extern crate gfx_shader_watch;
 /// # extern crate gfx_window_glutin;
 /// # extern crate glutin;
-/// # use glutin::GlContext;
 /// # use gfx::format::{Rgba8, Depth};
 ///
 /// gfx_defines!{

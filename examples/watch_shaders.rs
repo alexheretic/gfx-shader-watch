@@ -11,7 +11,6 @@ use gfx::traits::FactoryExt;
 use gfx::Device;
 use gfx::Primitive;
 use gfx_shader_watch::*;
-use glutin::GlContext;
 use std::env;
 use std::error::Error;
 
