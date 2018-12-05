@@ -32,7 +32,7 @@ macro_rules! debug_watcher_pso_cell_type {
 ///    # let window_builder = glutin::WindowBuilder::new();
 ///    # let context = glutin::ContextBuilder::new();
 ///    # let (_window, mut _device, mut factory, _main_color, _main_depth) =
-///    #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop);
+///    #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
 ///
 ///    let mut _pso_cell = debug_watcher_pso_cell!(
 ///        pipe = mypipeline,

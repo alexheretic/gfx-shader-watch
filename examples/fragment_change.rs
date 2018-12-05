@@ -67,7 +67,7 @@ pub fn main() -> Result<(), Box<Error>> {
         .with_dimensions((1024, 768).into());
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let (window, mut device, mut factory, main_color, _main_depth) =
-        gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop);
+        gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
