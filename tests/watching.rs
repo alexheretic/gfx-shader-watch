@@ -6,7 +6,7 @@ extern crate gfx;
 
 use gfx::format::Rgba8;
 
-gfx_defines!{
+gfx_defines! {
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }

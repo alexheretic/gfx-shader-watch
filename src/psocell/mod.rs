@@ -4,8 +4,7 @@ pub mod macros;
 
 pub use psocell::watcher::{WatcherPsoCell, WatcherPsoCellBuilder};
 
-use gfx::traits::FactoryExt;
-use gfx::*;
+use gfx::{traits::FactoryExt, *};
 use std::error::Error;
 
 /// Container for pipeline state object and a factory

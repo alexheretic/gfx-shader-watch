@@ -2,23 +2,20 @@
 extern crate log;
 #[macro_use]
 extern crate gfx;
-extern crate gfx_shader_watch;
 extern crate env_logger;
+extern crate gfx_shader_watch;
 extern crate gfx_window_glutin;
 extern crate glutin;
 
-use gfx::format::{Depth, Rgba8};
-use gfx::traits::FactoryExt;
-use gfx::Device;
+use gfx::{
+    format::{Depth, Rgba8},
+    traits::FactoryExt,
+    Device,
+};
 use gfx_shader_watch::*;
-use std::env;
-use std::error::Error;
-use std::fs::OpenOptions;
-use std::io::Write;
-use std::path::Path;
-use std::time::*;
+use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 
-gfx_defines!{
+gfx_defines! {
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }

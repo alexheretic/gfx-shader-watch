@@ -1,14 +1,7 @@
 use super::PsoCell;
-use gfx::traits::FactoryExt;
-use gfx::*;
-use notify;
-use notify::Watcher;
-use std::error::Error;
-use std::fs::File;
-use std::io::prelude::*;
-use std::path::PathBuf;
-use std::sync::mpsc;
-use std::time::Duration;
+use gfx::{traits::FactoryExt, *};
+use notify::{self, Watcher};
+use std::{error::Error, fs::File, io::prelude::*, path::PathBuf, sync::mpsc, time::Duration};
 
 fn shader_bytes(path: &PathBuf) -> Result<Vec<u8>, Box<Error>> {
     let mut shader = Vec::new();
@@ -160,7 +153,12 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             let fragment_shader = shader_bytes(fs)?;
             let vertex_shader = shader_bytes(vs)?;
             let set = factory.create_shader_set(&vertex_shader, &fragment_shader)?;
-            factory.create_pipeline_state(&set, self.primitive, self.rasterizer, self.init.clone())?
+            factory.create_pipeline_state(
+                &set,
+                self.primitive,
+                self.rasterizer,
+                self.init.clone(),
+            )?
         };
 
         Ok(WatcherPsoCell {

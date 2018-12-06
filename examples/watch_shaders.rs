@@ -1,20 +1,20 @@
 #[macro_use]
 extern crate gfx;
-extern crate gfx_shader_watch;
 extern crate env_logger;
+extern crate gfx_shader_watch;
 extern crate gfx_window_glutin;
 extern crate glutin;
 
-use gfx::format::{Depth, Rgba8};
-use gfx::state::Rasterizer;
-use gfx::traits::FactoryExt;
-use gfx::Device;
-use gfx::Primitive;
+use gfx::{
+    format::{Depth, Rgba8},
+    state::Rasterizer,
+    traits::FactoryExt,
+    Device, Primitive,
+};
 use gfx_shader_watch::*;
-use std::env;
-use std::error::Error;
+use std::{env, error::Error};
 
-gfx_defines!{
+gfx_defines! {
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }
