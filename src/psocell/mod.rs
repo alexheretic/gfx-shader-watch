@@ -74,7 +74,7 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         self
     }
 
-    pub fn build<R, F>(self, mut factory: F) -> Result<SimplePsoCell<R, F, I>, Box<Error>>
+    pub fn build<R, F>(self, mut factory: F) -> Result<SimplePsoCell<R, F, I>, Box<dyn Error>>
     where
         R: Resources,
         F: Factory<R>,

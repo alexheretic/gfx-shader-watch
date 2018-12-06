@@ -1,9 +1,10 @@
 use super::PsoCell;
 use gfx::{traits::FactoryExt, *};
+use log::{debug, error, info};
 use notify::{self, Watcher};
 use std::{error::Error, fs::File, io::prelude::*, path::PathBuf, sync::mpsc, time::Duration};
 
-fn shader_bytes(path: &PathBuf) -> Result<Vec<u8>, Box<Error>> {
+fn shader_bytes(path: &PathBuf) -> Result<Vec<u8>, Box<dyn Error>> {
     let mut shader = Vec::new();
     File::open(path)?.read_to_end(&mut shader)?;
     Ok(shader)
@@ -51,7 +52,7 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> WatcherPsoCell<R
         None
     }
 
-    fn build_pso(&mut self) -> Result<PipelineState<R, I::Meta>, Box<Error>>
+    fn build_pso(&mut self) -> Result<PipelineState<R, I::Meta>, Box<dyn Error>>
     where
         R: Resources,
         F: Factory<R>,
@@ -128,7 +129,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
         self
     }
 
-    pub fn build<R, F>(self, mut factory: F) -> Result<WatcherPsoCell<R, F, I>, Box<Error>>
+    pub fn build<R, F>(self, mut factory: F) -> Result<WatcherPsoCell<R, F, I>, Box<dyn Error>>
     where
         R: Resources,
         F: Factory<R>,

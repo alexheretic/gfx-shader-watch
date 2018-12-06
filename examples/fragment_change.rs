@@ -1,18 +1,11 @@
-#[macro_use]
-extern crate log;
-#[macro_use]
-extern crate gfx;
-extern crate env_logger;
-extern crate gfx_shader_watch;
-extern crate gfx_window_glutin;
-extern crate glutin;
-
 use gfx::{
+    self,
     format::{Depth, Rgba8},
     traits::FactoryExt,
-    Device,
+    Device, *,
 };
 use gfx_shader_watch::*;
+use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 
 gfx_defines! {
@@ -37,7 +30,7 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 static FRAGMENT_SHADER: &str = include_str!("shader/frag.glsl");
 
 /// Emulates a manual change of a shader contents, ie the dev changing the shader code
-fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
+fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<dyn Error>> {
     let path = Path::new(file!())
         .canonicalize()?
         .parent()
@@ -50,7 +43,7 @@ fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<Error>> {
     Ok(())
 }
 
-pub fn main() -> Result<(), Box<Error>> {
+pub fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
     // winit select x11 by default

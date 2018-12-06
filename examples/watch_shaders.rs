@@ -1,15 +1,9 @@
-#[macro_use]
-extern crate gfx;
-extern crate env_logger;
-extern crate gfx_shader_watch;
-extern crate gfx_window_glutin;
-extern crate glutin;
-
 use gfx::{
+    self,
     format::{Depth, Rgba8},
     state::Rasterizer,
     traits::FactoryExt,
-    Device, Primitive,
+    Device, Primitive, *,
 };
 use gfx_shader_watch::*;
 use std::{env, error::Error};
@@ -33,7 +27,7 @@ const TRIANGLE: [Vertex; 3] = [
 
 const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 
-pub fn main() -> Result<(), Box<Error>> {
+pub fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
     // winit select x11 by default
