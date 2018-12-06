@@ -90,4 +90,4 @@ extern crate notify;
 
 mod psocell;
 
-pub use psocell::*;
+pub use crate::psocell::*;

@@ -2,7 +2,7 @@ mod watcher;
 #[macro_use]
 pub mod macros;
 
-pub use psocell::watcher::{WatcherPsoCell, WatcherPsoCellBuilder};
+pub use crate::psocell::watcher::{WatcherPsoCell, WatcherPsoCellBuilder};
 
 use gfx::{traits::FactoryExt, *};
 use std::error::Error;
