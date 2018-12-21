@@ -49,3 +49,6 @@ pub fn main() {
 
 ## Examples
 Try running `cargo run --example watch-shaders` you should see a white triangle. Now open `examples/shader/frag.glsl` and modify it (ie change `gl_FragColor = white;` -> `gl_FragColor = red;`). You'll see the triangle shaded with the new code without the program reloading.
+
+## Minimum supported rust compiler
+This crate is maintained with [latest stable rust](https://gist.github.com/alexheretic/d1e98d8433b602e57f5d0a9637927e0c).
