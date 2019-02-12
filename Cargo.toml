@@ -1,6 +1,6 @@
 [package]
 name = "gfx_shader_watch"
-version = "0.5.0"
+version = "0.6.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2018"
 description = "GFX Utility for watching shaders and reloading pipeline state on the fly"
@@ -9,12 +9,12 @@ keywords = ["graphics", "gamedev"]
 license = "Apache-2.0"
 
 [dependencies]
-gfx = "0.17"
+gfx = "0.18"
 log = "0.4"
 notify = "4"
 
 [dev-dependencies]
-gfx_window_glutin = "0.28"
+gfx_window_glutin = "0.29"
 env_logger = "0.6"
 glutin = "0.19"
 
