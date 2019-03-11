@@ -3,17 +3,12 @@
 //!
 //! # Examples
 //! ```rust,no_run
-//! #[macro_use] extern crate gfx;
-//! #[macro_use] extern crate gfx_shader_watch;
-//! # extern crate gfx_window_glutin;
-//! # extern crate glutin;
-//!
+//! # #[macro_use] extern crate gfx;
 //! # use gfx::traits::FactoryExt;
 //! # use gfx::Device;
 //! # use gfx::format::{Rgba8, Depth};
 //! use gfx_shader_watch::*;
-//! use gfx::Primitive;
-//! use gfx::state::Rasterizer;
+//! use gfx::{Primitive, state::Rasterizer};
 //!
 //! # gfx_defines!{
 //! #     vertex Vertex {

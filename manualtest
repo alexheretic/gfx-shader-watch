@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -eu
 
-cargo test
+cargo +stable test
 
 echo "Debug mode: fragment file changes cause reloaded PSOs"
-RUST_LOG=gfx_shader_watch=debug cargo run --example fragment-change
+RUST_LOG=gfx_shader_watch=debug cargo +stable run --example fragment-change
 
 echo "Release mode: fragment file included as bytes so file changes have no effect"
-cargo run --example fragment-change --release
+cargo +stable run --example fragment-change --release
