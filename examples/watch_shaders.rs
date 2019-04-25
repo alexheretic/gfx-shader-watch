@@ -40,7 +40,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         .with_title("Triangle".to_string())
         .with_dimensions((1024, 768).into());
     let context = glutin::ContextBuilder::new().with_vsync(true);
-    let (window, mut device, mut factory, main_color, _main_depth) =
+    let (window_ctx, mut device, mut factory, main_color, _main_depth) =
         gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
@@ -90,7 +90,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window.swap_buffers()?;
+        window_ctx.swap_buffers()?;
         device.cleanup();
     }
 
