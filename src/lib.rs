@@ -26,14 +26,14 @@
 //! # ];
 //! pub fn main() {
 //!     // {code to setup window / gfx factory etc }
-//!     # let mut events_loop = glutin::EventsLoop::new();
-//!     # let window_builder = glutin::WindowBuilder::new()
+//!     # let mut event_loop = glutin::event_loop::EventLoop::new();
+//!     # let window_builder = glutin::window::WindowBuilder::new()
 //!     #     .with_title("Triangle".to_string())
-//!     #     .with_dimensions((1024, 768).into());
+//!     #     .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
 //!     # let context = glutin::ContextBuilder::new()
 //!     #     .with_vsync(true);
 //!     # let (window, mut device, mut factory, main_color, _main_depth) =
-//!     #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
+//!     #     gfx_window_glutin::init::<Rgba8, Depth, _>(window_builder, context, &event_loop).unwrap();
 //!     # let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 //!     # let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&TRIANGLE, ());
 //!     # let data = mypipeline::Data {
@@ -54,20 +54,6 @@
 //!     let mut running = true;
 //!     while running {
 //!         // ...
-//!     #    events_loop.poll_events(|event| {
-//!     #        if let glutin::Event::WindowEvent{ event, .. } = event {
-//!     #            match event {
-//!     #                glutin::WindowEvent::KeyboardInput {
-//!     #                    input: glutin::KeyboardInput {
-//!     #                        virtual_keycode: Some(glutin::VirtualKeyCode::Escape),
-//!     #                        .. },
-//!     #                    ..
-//!     #                } |
-//!     #                glutin::WindowEvent::CloseRequested => running = false,
-//!     #                _ => {},
-//!     #            }
-//!     #        }
-//!     #    });
 //!     #    encoder.clear(&data.out, [0.1, 0.2, 0.3, 1.0]);
 //!         encoder.draw(&slice, pso_cell.pso(), &data);
 //!         // ...

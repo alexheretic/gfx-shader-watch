@@ -5,6 +5,7 @@ use gfx::{
     Device, *,
 };
 use gfx_shader_watch::*;
+use glutin::{event_loop::EventLoop, window::WindowBuilder};
 use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 
@@ -51,13 +52,13 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         env::set_var("WINIT_UNIX_BACKEND", "x11");
     }
 
-    let events_loop = glutin::EventsLoop::new();
-    let window_builder = glutin::WindowBuilder::new()
+    let event_loop = EventLoop::new();
+    let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_dimensions((1024, 768).into());
+        .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
     let context = glutin::ContextBuilder::new().with_vsync(true);
     let (window_ctx, mut device, mut factory, main_color, _main_depth) =
-        gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
+        gfx_window_glutin::init::<Rgba8, Depth, _>(window_builder, context, &event_loop).unwrap();
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 

@@ -28,11 +28,11 @@ macro_rules! debug_watcher_pso_cell_type {
 ///
 /// pub fn main() {
 ///    // {code initialising a gfx `factory`}
-///    # let events_loop = glutin::EventsLoop::new();
-///    # let window_builder = glutin::WindowBuilder::new();
+///    # let event_loop = glutin::event_loop::EventLoop::new();
+///    # let window_builder = glutin::window::WindowBuilder::new();
 ///    # let context = glutin::ContextBuilder::new();
 ///    # let (_window, mut _device, mut factory, _main_color, _main_depth) =
-///    #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
+///    #     gfx_window_glutin::init::<Rgba8, Depth, _>(window_builder, context, &event_loop).unwrap();
 ///
 ///    let mut _pso_cell = debug_watcher_pso_cell!(
 ///        pipe = mypipeline,
