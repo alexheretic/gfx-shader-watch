@@ -9,14 +9,14 @@ keywords = ["graphics", "gamedev"]
 license = "Apache-2.0"
 
 [dependencies]
-gfx = { git = "https://github.com/alexheretic/gfx", branch = "v0.18" }
+gfx = "0.18"
 log = "0.4"
 notify = "4"
 
 [dev-dependencies]
-gfx_window_glutin = { git = "https://github.com/alexheretic/gfx", branch = "v0.18" }
 env_logger = "0.7"
 glutin = "0.22"
+old_school_gfx_glutin_ext = "0.22"
 
 [[example]]
 name = "watch-shaders"

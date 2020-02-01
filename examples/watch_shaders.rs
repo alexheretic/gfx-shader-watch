@@ -1,6 +1,6 @@
 use gfx::{
     self,
-    format::{Depth, Rgba8},
+    format::{Depth, Srgba8},
     state::Rasterizer,
     traits::FactoryExt,
     Device, Primitive, *,
@@ -11,6 +11,7 @@ use glutin::{
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
+use old_school_gfx_glutin_ext::*;
 use std::{env, error::Error};
 
 gfx_defines! {
@@ -20,7 +21,7 @@ gfx_defines! {
 
     pipeline trianglepipe {
         vbuf: gfx::VertexBuffer<Vertex> = (),
-        out: gfx::RenderTarget<Rgba8> = "Target0",
+        out: gfx::RenderTarget<Srgba8> = "Target0",
     }
 }
 
@@ -44,9 +45,12 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
         .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
-    let context = glutin::ContextBuilder::new().with_vsync(true);
+
     let (window_ctx, mut device, mut factory, main_color, _main_depth) =
-        gfx_window_glutin::init::<Rgba8, Depth, _>(window_builder, context, &event_loop).unwrap();
+        glutin::ContextBuilder::new()
+            .with_gfx_color_depth::<Srgba8, Depth>()
+            .build_windowed(window_builder, &event_loop)?
+            .init_gfx::<Srgba8, Depth>();
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
