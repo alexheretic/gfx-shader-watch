@@ -1,11 +1,17 @@
 use gfx::{
     self,
-    format::{Depth, Rgba8},
+    format::{Depth, Srgba8},
     state::Rasterizer,
     traits::FactoryExt,
     Device, Primitive, *,
 };
 use gfx_shader_watch::*;
+use glutin::{
+    event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
+use old_school_gfx_glutin_ext::*;
 use std::{env, error::Error};
 
 gfx_defines! {
@@ -15,7 +21,7 @@ gfx_defines! {
 
     pipeline trianglepipe {
         vbuf: gfx::VertexBuffer<Vertex> = (),
-        out: gfx::RenderTarget<Rgba8> = "Target0",
+        out: gfx::RenderTarget<Srgba8> = "Target0",
     }
 }
 
@@ -35,13 +41,16 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         env::set_var("WINIT_UNIX_BACKEND", "x11");
     }
 
-    let mut events_loop = glutin::EventsLoop::new();
-    let window_builder = glutin::WindowBuilder::new()
+    let event_loop = EventLoop::new();
+    let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_dimensions((1024, 768).into());
-    let context = glutin::ContextBuilder::new().with_vsync(true);
+        .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
+
     let (window_ctx, mut device, mut factory, main_color, _main_depth) =
-        gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
+        glutin::ContextBuilder::new()
+            .with_gfx_color_depth::<Srgba8, Depth>()
+            .build_windowed(window_builder, &event_loop)?
+            .init_gfx::<Srgba8, Depth>();
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
@@ -68,31 +77,31 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         rasterizer = Rasterizer::new_fill()
     )?;
 
-    let mut running = true;
-    while running {
-        events_loop.poll_events(|event| {
-            if let glutin::Event::WindowEvent { event, .. } = event {
-                match event {
-                    glutin::WindowEvent::KeyboardInput {
-                        input:
-                            glutin::KeyboardInput {
-                                virtual_keycode: Some(glutin::VirtualKeyCode::Escape),
-                                ..
-                            },
-                        ..
-                    }
-                    | glutin::WindowEvent::CloseRequested => running = false,
-                    _ => {}
-                }
+    event_loop.run(move |event, _, control_flow| {
+        *control_flow = ControlFlow::Poll;
+
+        match event {
+            Event::MainEventsCleared => window_ctx.window().request_redraw(),
+            Event::WindowEvent { event, .. } => match event {
+                WindowEvent::CloseRequested
+                | WindowEvent::KeyboardInput {
+                    input:
+                        KeyboardInput {
+                            virtual_keycode: Some(VirtualKeyCode::Escape),
+                            ..
+                        },
+                    ..
+                } => *control_flow = ControlFlow::Exit,
+                _ => (),
+            },
+            Event::RedrawRequested(_) => {
+                encoder.clear(&data.out, CLEAR_COLOR);
+                encoder.draw(&slice, pso_cell.pso(), &data);
+                encoder.flush(&mut device);
+                window_ctx.swap_buffers().unwrap();
+                device.cleanup();
             }
-        });
-
-        encoder.clear(&data.out, CLEAR_COLOR);
-        encoder.draw(&slice, pso_cell.pso(), &data);
-        encoder.flush(&mut device);
-        window_ctx.swap_buffers()?;
-        device.cleanup();
-    }
-
-    Ok(())
+            _ => (),
+        }
+    });
 }

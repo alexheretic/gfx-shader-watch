@@ -13,14 +13,8 @@ macro_rules! debug_watcher_pso_cell_type {
 /// The type itself can be attained similarly with the `debug_watcher_pso_cell_type` macro
 ///
 /// # Examples
-/// ```rust,no_run
-/// #[macro_use] extern crate gfx;
-/// #[macro_use] extern crate gfx_shader_watch;
-/// # extern crate gfx_window_glutin;
-/// # extern crate glutin;
-/// # use gfx::format::{Rgba8, Depth};
-///
-/// gfx_defines!{
+/// ```ignore
+/// gfx_defines! {
 ///     pipeline mypipeline {
 ///         out: gfx::RenderTarget<gfx::format::Rgba8> = "Target0",
 ///     }
@@ -28,11 +22,6 @@ macro_rules! debug_watcher_pso_cell_type {
 ///
 /// pub fn main() {
 ///    // {code initialising a gfx `factory`}
-///    # let events_loop = glutin::EventsLoop::new();
-///    # let window_builder = glutin::WindowBuilder::new();
-///    # let context = glutin::ContextBuilder::new();
-///    # let (_window, mut _device, mut factory, _main_color, _main_depth) =
-///    #     gfx_window_glutin::init::<Rgba8, Depth>(window_builder, context, &events_loop).unwrap();
 ///
 ///    let mut _pso_cell = debug_watcher_pso_cell!(
 ///        pipe = mypipeline,
