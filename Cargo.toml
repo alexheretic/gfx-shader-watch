@@ -14,7 +14,7 @@ log = "0.4"
 notify = "4"
 
 [dev-dependencies]
-env_logger = "0.7"
+env_logger = "0.8"
 glutin = "0.25"
 old_school_gfx_glutin_ext = "0.25"
 
