@@ -2,9 +2,16 @@ use super::PsoCell;
 use gfx::{traits::FactoryExt, *};
 use log::{debug, error, info};
 use notify::{self, Watcher};
-use std::{error::Error, fs::File, io::prelude::*, path::PathBuf, sync::mpsc, time::Duration};
+use std::{
+    error::Error,
+    fs::File,
+    io::prelude::*,
+    path::{Path, PathBuf},
+    sync::mpsc,
+    time::Duration,
+};
 
-fn shader_bytes(path: &PathBuf) -> Result<Vec<u8>, Box<dyn Error>> {
+fn shader_bytes(path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
     let mut shader = Vec::new();
     File::open(path)?.read_to_end(&mut shader)?;
     Ok(shader)

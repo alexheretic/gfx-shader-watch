@@ -84,6 +84,6 @@ impl<I: pso::PipelineInit + Clone> SimplePsoCellBuilder<I> {
         let set = factory.create_shader_set(&vs, &fs)?;
         let pso =
             factory.create_pipeline_state(&set, self.primitive, self.rasterizer, self.init)?;
-        Ok(SimplePsoCell { factory, pso })
+        Ok(SimplePsoCell { pso, factory })
     }
 }
