@@ -11,6 +11,7 @@ use old_school_gfx_glutin_ext::*;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 
 gfx_defines! { vertex V { p: f32 = "p", } pipeline p { vbuf: gfx::VertexBuffer<V> = (), } }
+impl Eq for p::Meta {}
 
 gfx_defines! {
     vertex Vertex {
@@ -22,6 +23,7 @@ gfx_defines! {
         out: gfx::RenderTarget<Srgba8> = "Target0",
     }
 }
+impl Eq for trianglepipe::Meta {}
 
 const TRIANGLE: [Vertex; 3] = [
     Vertex { pos: [-0.5, -0.5] },

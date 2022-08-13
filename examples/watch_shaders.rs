@@ -24,6 +24,7 @@ gfx_defines! {
         out: gfx::RenderTarget<Srgba8> = "Target0",
     }
 }
+impl Eq for trianglepipe::Meta {}
 
 const TRIANGLE: [Vertex; 3] = [
     Vertex { pos: [-0.5, -0.5] },
