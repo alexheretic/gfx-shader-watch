@@ -2,7 +2,7 @@
 name = "gfx_shader_watch"
 version = "0.6.0"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
-edition = "2018"
+edition = "2021"
 description = "GFX Utility for watching shaders and reloading pipeline state on the fly"
 repository = "https://github.com/alexheretic/gfx-shader-watch"
 keywords = ["graphics", "gamedev"]

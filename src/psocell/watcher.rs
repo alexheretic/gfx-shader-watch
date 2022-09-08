@@ -47,10 +47,10 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> WatcherPsoCell<R
         if let Some(changed) = path_changed {
             match self.build_pso() {
                 Ok(pso) => {
-                    info!("{:?} changed", changed);
+                    info!("{changed:?} changed");
                     return Some(pso);
                 }
-                Err(err) => error!("{:?}", err),
+                Err(err) => error!("{err:?}"),
             };
         }
         None
