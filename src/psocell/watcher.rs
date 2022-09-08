@@ -8,7 +8,6 @@ use std::{
     io::prelude::*,
     path::{Path, PathBuf},
     sync::mpsc,
-    time::Duration,
 };
 
 fn shader_bytes(path: &Path) -> Result<Vec<u8>, Box<dyn Error>> {
@@ -25,7 +24,7 @@ pub struct WatcherPsoCell<R: Resources, F: Factory<R>, I: pso::PipelineInit> {
     primitive: Primitive,
     rasterizer: state::Rasterizer,
     _watcher: notify::RecommendedWatcher,
-    shader_mods: mpsc::Receiver<notify::DebouncedEvent>,
+    shader_mods: mpsc::Receiver<notify::Result<notify::Event>>,
 
     factory: F,
     pso: PipelineState<R, I::Meta>,
@@ -37,24 +36,22 @@ impl<R: Resources, F: Factory<R>, I: pso::PipelineInit + Clone> WatcherPsoCell<R
         R: Resources,
         F: Factory<R>,
     {
-        if let Ok(event) = self.shader_mods.try_recv() {
-            match event {
-                notify::DebouncedEvent::Create(path)
-                | notify::DebouncedEvent::NoticeWrite(path) => {
-                    if path != self.vertex_shader && path != self.fragment_shader {
-                        return None;
-                    }
-
-                    match self.build_pso() {
-                        Ok(pso) => {
-                            info!("{:?} changed", path);
-                            return Some(pso);
-                        }
-                        Err(err) => error!("{:?}", err),
-                    };
-                }
-                _ => {}
+        let mut path_changed = None;
+        for notify::Event { paths, kind, .. } in self.shader_mods.try_iter().flatten() {
+            if path_changed.is_none() && (kind.is_modify() || kind.is_create()) {
+                path_changed = paths
+                    .into_iter()
+                    .find(|p| p == &self.vertex_shader || p == &self.fragment_shader)
             }
+        }
+        if let Some(changed) = path_changed {
+            match self.build_pso() {
+                Ok(pso) => {
+                    info!("{:?} changed", changed);
+                    return Some(pso);
+                }
+                Err(err) => error!("{:?}", err),
+            };
         }
         None
     }
@@ -142,7 +139,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
         F: Factory<R>,
     {
         let (tx, shader_mods) = mpsc::channel();
-        let mut watcher = notify::watcher(tx, Duration::from_millis(100))?;
+        let mut watcher = notify::RecommendedWatcher::new(tx, <_>::default())?;
         let pso = {
             let vs = self.vertex_shader.as_ref().ok_or("missing vertex shader")?;
             let fs = self
