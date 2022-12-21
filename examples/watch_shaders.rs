@@ -6,13 +6,13 @@ use gfx::{
     Device, Primitive, *,
 };
 use gfx_shader_watch::*;
-use glutin::{
+use glutin::surface::GlSurface;
+use std::{error::Error, num::NonZeroU32};
+use winit::{
     event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     window::WindowBuilder,
 };
-use old_school_gfx_glutin_ext::*;
-use std::{env, error::Error};
 
 gfx_defines! {
     vertex Vertex {
@@ -37,28 +37,30 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 pub fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
-    // winit select x11 by default
-    if cfg!(target_os = "linux") && env::var("WINIT_UNIX_BACKEND").is_err() {
-        env::set_var("WINIT_UNIX_BACKEND", "x11");
-    }
-
     let event_loop = EventLoop::new();
     let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
+        .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
 
-    let (window_ctx, mut device, mut factory, main_color, _main_depth) =
-        glutin::ContextBuilder::new()
-            .with_gfx_color_depth::<Srgba8, Depth>()
-            .build_windowed(window_builder, &event_loop)?
-            .init_gfx::<Srgba8, Depth>();
+    let old_school_gfx_glutin_ext::Init {
+        window,
+        gl_surface,
+        gl_context,
+        mut device,
+        mut factory,
+        color_view,
+        mut depth_view,
+        ..
+    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_builder)
+        .build::<Srgba8, Depth>()?;
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
+    let mut view_size = window.inner_size();
 
     let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&TRIANGLE, ());
-    let data = trianglepipe::Data {
+    let mut data = trianglepipe::Data {
         vbuf: vertex_buffer,
-        out: main_color,
+        out: color_view,
     };
 
     // This object holds the pipeline state object and it's own factory
@@ -82,7 +84,6 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         *control_flow = ControlFlow::Poll;
 
         match event {
-            Event::MainEventsCleared => window_ctx.window().request_redraw(),
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested
                 | WindowEvent::KeyboardInput {
@@ -95,11 +96,27 @@ pub fn main() -> Result<(), Box<dyn Error>> {
                 } => *control_flow = ControlFlow::Exit,
                 _ => (),
             },
-            Event::RedrawRequested(_) => {
+            Event::MainEventsCleared => {
+                // handle resizes
+                let w_size = window.inner_size();
+                if view_size != w_size {
+                    if let (Some(w), Some(h)) = (
+                        NonZeroU32::new(w_size.width),
+                        NonZeroU32::new(w_size.height),
+                    ) {
+                        gl_surface.resize(&gl_context, w, h);
+                        old_school_gfx_glutin_ext::resize_views(
+                            w_size,
+                            &mut data.out,
+                            &mut depth_view,
+                        );
+                    }
+                    view_size = w_size;
+                }
                 encoder.clear(&data.out, CLEAR_COLOR);
                 encoder.draw(&slice, pso_cell.pso(), &data);
                 encoder.flush(&mut device);
-                window_ctx.swap_buffers().unwrap();
+                gl_surface.swap_buffers(&gl_context).unwrap();
                 device.cleanup();
             }
             _ => (),

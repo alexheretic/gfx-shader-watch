@@ -15,8 +15,9 @@ notify = "5"
 
 [dev-dependencies]
 env_logger = "0.10"
-glutin = "0.29"
-old_school_gfx_glutin_ext = "0.29"
+glutin = "0.30.3"
+old_school_gfx_glutin_ext = { git = "https://github.com/alexheretic/old-school-gfx-glutin-ext" }
+winit = "0.27"
 
 [[example]]
 name = "watch-shaders"

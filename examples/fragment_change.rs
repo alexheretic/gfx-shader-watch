@@ -5,10 +5,10 @@ use gfx::{
     Device, *,
 };
 use gfx_shader_watch::*;
-use glutin::{event_loop::EventLoop, window::WindowBuilder};
+use glutin::surface::GlSurface;
 use log::info;
-use old_school_gfx_glutin_ext::*;
-use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
+use std::{error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
+use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 gfx_defines! { vertex V { p: f32 = "p", } pipeline p { vbuf: gfx::VertexBuffer<V> = (), } }
 impl Eq for p::Meta {}
@@ -52,28 +52,27 @@ fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<dyn Error>> {
 pub fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
-    // winit select x11 by default
-    if cfg!(target_os = "linux") && env::var("WINIT_UNIX_BACKEND").is_err() {
-        env::set_var("WINIT_UNIX_BACKEND", "x11");
-    }
-
     let event_loop = EventLoop::new();
     let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
-        .with_inner_size(glutin::dpi::PhysicalSize::new(1024, 768));
+        .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
 
-    let (window_ctx, mut device, mut factory, main_color, _main_depth) =
-        glutin::ContextBuilder::new()
-            .with_gfx_color_depth::<Srgba8, Depth>()
-            .build_windowed(window_builder, &event_loop)?
-            .init_gfx::<Srgba8, Depth>();
+    let old_school_gfx_glutin_ext::Init {
+        gl_surface,
+        gl_context,
+        mut device,
+        mut factory,
+        color_view,
+        ..
+    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_builder)
+        .build::<Srgba8, Depth>()?;
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
     let (vertex_buffer, slice) = factory.create_vertex_buffer_with_slice(&TRIANGLE, ());
     let data = trianglepipe::Data {
         vbuf: vertex_buffer,
-        out: main_color,
+        out: color_view,
     };
 
     // This object holds the pipeline state object and it's own factory
@@ -97,7 +96,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window_ctx.swap_buffers()?;
+        gl_surface.swap_buffers(&gl_context)?;
         device.cleanup();
     }
 
@@ -110,7 +109,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window_ctx.swap_buffers()?;
+        gl_surface.swap_buffers(&gl_context)?;
         device.cleanup();
     }
 
@@ -123,7 +122,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         encoder.clear(&data.out, CLEAR_COLOR);
         encoder.draw(&slice, pso_cell.pso(), &data);
         encoder.flush(&mut device);
-        window_ctx.swap_buffers()?;
+        gl_surface.swap_buffers(&gl_context)?;
         device.cleanup();
     }
 
