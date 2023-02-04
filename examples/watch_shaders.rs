@@ -7,7 +7,7 @@ use gfx::{
 };
 use gfx_shader_watch::*;
 use glutin::surface::GlSurface;
-use std::{error::Error, num::NonZeroU32};
+use std::{env, error::Error, num::NonZeroU32};
 use winit::{
     event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
@@ -35,11 +35,14 @@ const TRIANGLE: [Vertex; 3] = [
 const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 
 pub fn main() -> Result<(), Box<dyn Error>> {
+    if env::var_os("RUST_LOG").is_none() {
+        env::set_var("RUST_LOG", "gfx_shader_watch=debug");
+    }
     env_logger::init();
 
     let event_loop = EventLoop::new();
     let window_builder = WindowBuilder::new()
-        .with_title("Triangle".to_string())
+        .with_title("Try changing shader/frag.glsl".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
 
     let old_school_gfx_glutin_ext::Init {

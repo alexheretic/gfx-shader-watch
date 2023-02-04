@@ -7,7 +7,7 @@ use gfx::{
 use gfx_shader_watch::*;
 use glutin::surface::GlSurface;
 use log::info;
-use std::{error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
+use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
 gfx_defines! { vertex V { p: f32 = "p", } pipeline p { vbuf: gfx::VertexBuffer<V> = (), } }
@@ -50,6 +50,9 @@ fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
+    if env::var_os("RUST_LOG").is_none() {
+        env::set_var("RUST_LOG", "gfx_shader_watch=debug");
+    }
     env_logger::init();
 
     let event_loop = EventLoop::new();
