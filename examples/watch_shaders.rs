@@ -15,6 +15,7 @@ use winit::{
 };
 
 gfx_defines! {
+    #[repr(C)]
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }

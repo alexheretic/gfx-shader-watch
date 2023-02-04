@@ -10,10 +10,15 @@ use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 use winit::{event_loop::EventLoop, window::WindowBuilder};
 
-gfx_defines! { vertex V { p: f32 = "p", } pipeline p { vbuf: gfx::VertexBuffer<V> = (), } }
+gfx_defines! {
+    #[repr(C)]
+    vertex V { p: f32 = "p", }
+    pipeline p { vbuf: gfx::VertexBuffer<V> = (), }
+}
 impl Eq for p::Meta {}
 
 gfx_defines! {
+    #[repr(C)]
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }
