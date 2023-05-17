@@ -11,7 +11,7 @@ license = "Apache-2.0"
 [dependencies]
 gfx = "0.18"
 log = "0.4"
-notify = "5"
+notify = "6"
 
 [dev-dependencies]
 env_logger = "0.10"
