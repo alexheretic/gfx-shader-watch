@@ -8,7 +8,10 @@ use gfx_shader_watch::*;
 use glutin::surface::GlSurface;
 use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
-use winit::{event_loop::{EventLoop, ControlFlow}, window::WindowBuilder};
+use winit::{
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
 
 gfx_defines! {
     vertex V { p: f32 = "p", }
