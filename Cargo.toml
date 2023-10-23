@@ -9,15 +9,15 @@ keywords = ["graphics", "gamedev"]
 license = "Apache-2.0"
 
 [dependencies]
-gfx = "0.18"
+gfx = "0.18.3"
 log = "0.4"
 notify = "6"
 
 [dev-dependencies]
 env_logger = "0.10"
-glutin = "0.30.3"
-old_school_gfx_glutin_ext = "0.31"
-winit = "0.28"
+glutin = "0.31"
+old_school_gfx_glutin_ext = { path = "../old-school-gfx-glutin-ext" }
+winit = "0.29"
 
 [[example]]
 name = "watch-shaders"
