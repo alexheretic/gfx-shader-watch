@@ -16,7 +16,7 @@ notify = "6"
 [dev-dependencies]
 env_logger = "0.10"
 glutin = "0.31"
-old_school_gfx_glutin_ext = { path = "../old-school-gfx-glutin-ext" }
+old_school_gfx_glutin_ext = "0.32"
 winit = "0.29"
 
 [[example]]
