@@ -9,13 +9,13 @@ use gfx_shader_watch::*;
 use glutin::surface::GlSurface;
 use std::{env, error::Error, num::NonZeroU32};
 use winit::{
-    event::{Event, KeyboardInput, VirtualKeyCode, WindowEvent},
+    event::{Event, KeyEvent, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
+    keyboard::{Key, NamedKey},
     window::WindowBuilder,
 };
 
 gfx_defines! {
-    #[repr(C)]
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }
@@ -41,7 +41,8 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     }
     env_logger::init();
 
-    let event_loop = EventLoop::new();
+    let event_loop = EventLoop::new()?;
+    event_loop.set_control_flow(ControlFlow::Poll);
     let window_builder = WindowBuilder::new()
         .with_title("Try changing shader/frag.glsl".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
@@ -84,46 +85,47 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         rasterizer = Rasterizer::new_fill()
     )?;
 
-    event_loop.run(move |event, _, control_flow| {
-        *control_flow = ControlFlow::Poll;
-
+    event_loop.run(move |event, elwt| {
         match event {
+            Event::AboutToWait => window.request_redraw(),
             Event::WindowEvent { event, .. } => match event {
                 WindowEvent::CloseRequested
                 | WindowEvent::KeyboardInput {
-                    input:
-                        KeyboardInput {
-                            virtual_keycode: Some(VirtualKeyCode::Escape),
+                    event:
+                        KeyEvent {
+                            logical_key: Key::Named(NamedKey::Escape),
                             ..
                         },
                     ..
-                } => *control_flow = ControlFlow::Exit,
+                } => elwt.exit(),
+                WindowEvent::RedrawRequested => {
+                    // handle resizes
+                    let w_size = window.inner_size();
+                    if view_size != w_size {
+                        if let (Some(w), Some(h)) = (
+                            NonZeroU32::new(w_size.width),
+                            NonZeroU32::new(w_size.height),
+                        ) {
+                            gl_surface.resize(&gl_context, w, h);
+                            old_school_gfx_glutin_ext::resize_views(
+                                w_size,
+                                &mut data.out,
+                                &mut depth_view,
+                            );
+                        }
+                        view_size = w_size;
+                    }
+                    encoder.clear(&data.out, CLEAR_COLOR);
+                    encoder.draw(&slice, pso_cell.pso(), &data);
+                    encoder.flush(&mut device);
+                    gl_surface.swap_buffers(&gl_context).unwrap();
+                    device.cleanup();
+                }
                 _ => (),
             },
-            Event::MainEventsCleared => {
-                // handle resizes
-                let w_size = window.inner_size();
-                if view_size != w_size {
-                    if let (Some(w), Some(h)) = (
-                        NonZeroU32::new(w_size.width),
-                        NonZeroU32::new(w_size.height),
-                    ) {
-                        gl_surface.resize(&gl_context, w, h);
-                        old_school_gfx_glutin_ext::resize_views(
-                            w_size,
-                            &mut data.out,
-                            &mut depth_view,
-                        );
-                    }
-                    view_size = w_size;
-                }
-                encoder.clear(&data.out, CLEAR_COLOR);
-                encoder.draw(&slice, pso_cell.pso(), &data);
-                encoder.flush(&mut device);
-                gl_surface.swap_buffers(&gl_context).unwrap();
-                device.cleanup();
-            }
             _ => (),
         }
-    });
+    })?;
+
+    Ok(())
 }

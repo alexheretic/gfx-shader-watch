@@ -8,17 +8,18 @@ use gfx_shader_watch::*;
 use glutin::surface::GlSurface;
 use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
-use winit::{event_loop::EventLoop, window::WindowBuilder};
+use winit::{
+    event_loop::{ControlFlow, EventLoop},
+    window::WindowBuilder,
+};
 
 gfx_defines! {
-    #[repr(C)]
     vertex V { p: f32 = "p", }
     pipeline p { vbuf: gfx::VertexBuffer<V> = (), }
 }
 impl Eq for p::Meta {}
 
 gfx_defines! {
-    #[repr(C)]
     vertex Vertex {
         pos: [f32; 2] = "pos",
     }
@@ -60,7 +61,8 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     }
     env_logger::init();
 
-    let event_loop = EventLoop::new();
+    let event_loop = EventLoop::new()?;
+    event_loop.set_control_flow(ControlFlow::Poll);
     let window_builder = WindowBuilder::new()
         .with_title("Triangle".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
