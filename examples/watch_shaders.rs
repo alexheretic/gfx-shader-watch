@@ -12,7 +12,7 @@ use winit::{
     event::{Event, KeyEvent, WindowEvent},
     event_loop::{ControlFlow, EventLoop},
     keyboard::{Key, NamedKey},
-    window::WindowBuilder,
+    window::Window,
 };
 
 gfx_defines! {
@@ -43,7 +43,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 
     let event_loop = EventLoop::new()?;
     event_loop.set_control_flow(ControlFlow::Poll);
-    let window_builder = WindowBuilder::new()
+    let window_attrs = Window::default_attributes()
         .with_title("Try changing shader/frag.glsl".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
 
@@ -56,7 +56,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         color_view,
         mut depth_view,
         ..
-    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_builder)
+    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_attrs)
         .build::<Srgba8, Depth>()?;
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();

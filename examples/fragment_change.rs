@@ -10,7 +10,7 @@ use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 use winit::{
     event_loop::{ControlFlow, EventLoop},
-    window::WindowBuilder,
+    window::Window,
 };
 
 gfx_defines! {
@@ -63,7 +63,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
 
     let event_loop = EventLoop::new()?;
     event_loop.set_control_flow(ControlFlow::Poll);
-    let window_builder = WindowBuilder::new()
+    let window_attrs = Window::default_attributes()
         .with_title("Triangle".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
 
@@ -74,7 +74,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         mut factory,
         color_view,
         ..
-    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_builder)
+    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_attrs)
         .build::<Srgba8, Depth>()?;
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
