@@ -15,8 +15,9 @@ notify = "6"
 
 [dev-dependencies]
 env_logger = "0.11"
+gfx_device_gl = "0.16.2"
 glutin = "0.32"
-old_school_gfx_glutin_ext = "0.33"
+old_school_gfx_glutin_ext = "0.34"
 winit = "0.30"
 
 [[example]]

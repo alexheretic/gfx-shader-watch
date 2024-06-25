@@ -9,7 +9,8 @@ use glutin::surface::GlSurface;
 use log::info;
 use std::{env, error::Error, fs::OpenOptions, io::Write, path::Path, time::*};
 use winit::{
-    event_loop::{ControlFlow, EventLoop},
+    event::WindowEvent,
+    event_loop::{ActiveEventLoop, EventLoop},
     window::Window,
 };
 
@@ -41,28 +42,26 @@ const CLEAR_COLOR: [f32; 4] = [0.1, 0.2, 0.3, 1.0];
 
 static FRAGMENT_SHADER: &str = include_str!("shader/frag.glsl");
 
-/// Emulates a manual change of a shader contents, ie the dev changing the shader code
-fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<dyn Error>> {
-    let path = Path::new(file!())
-        .canonicalize()?
-        .parent()
-        .ok_or("no parent")?
-        .join("shader")
-        .join("frag.glsl");
-    let mut shader = OpenOptions::new().write(true).open(path)?;
-    shader.set_len(0)?;
-    shader.write_all(new_contents.as_bytes())?;
-    Ok(())
-}
-
 pub fn main() -> Result<(), Box<dyn Error>> {
     if env::var_os("RUST_LOG").is_none() {
         env::set_var("RUST_LOG", "gfx_shader_watch=debug");
     }
     env_logger::init();
+    Ok(EventLoop::new()?.run_app(&mut WinitApp)?)
+}
 
-    let event_loop = EventLoop::new()?;
-    event_loop.set_control_flow(ControlFlow::Poll);
+struct WinitApp;
+
+impl winit::application::ApplicationHandler for WinitApp {
+    fn resumed(&mut self, events: &ActiveEventLoop) {
+        run(events).unwrap();
+        events.exit();
+    }
+
+    fn window_event(&mut self, _: &ActiveEventLoop, _: winit::window::WindowId, _: WindowEvent) {}
+}
+
+fn run(events: &ActiveEventLoop) -> Result<(), Box<dyn Error>> {
     let window_attrs = Window::default_attributes()
         .with_title("Triangle".to_string())
         .with_inner_size(winit::dpi::PhysicalSize::new(1024, 768));
@@ -74,8 +73,7 @@ pub fn main() -> Result<(), Box<dyn Error>> {
         mut factory,
         color_view,
         ..
-    } = old_school_gfx_glutin_ext::window_builder(&event_loop, window_attrs)
-        .build::<Srgba8, Depth>()?;
+    } = old_school_gfx_glutin_ext::window_builder(events, window_attrs).build::<Srgba8, Depth>()?;
 
     let mut encoder: gfx::Encoder<_, _> = factory.create_command_buffer().into();
 
@@ -137,6 +135,19 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     }
 
     overwrite_fragment_shader(FRAGMENT_SHADER)?;
+    Ok(())
+}
 
+/// Emulates a manual change of a shader contents, ie the dev changing the shader code
+fn overwrite_fragment_shader(new_contents: &str) -> Result<(), Box<dyn Error>> {
+    let path = Path::new(file!())
+        .canonicalize()?
+        .parent()
+        .ok_or("no parent")?
+        .join("shader")
+        .join("frag.glsl");
+    let mut shader = OpenOptions::new().write(true).open(path)?;
+    shader.set_len(0)?;
+    shader.write_all(new_contents.as_bytes())?;
     Ok(())
 }
