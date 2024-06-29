@@ -78,9 +78,6 @@ impl winit::application::ApplicationHandler for WinitApp {
 }
 
 struct App {
-    window: Window,
-    gl_surface: Surface<WindowSurface>,
-    gl_context: PossiblyCurrentContext,
     device: gfx_device_gl::Device,
     encoder: gfx::Encoder<gfx_device_gl::Resources, gfx_device_gl::CommandBuffer>,
     depth_view: gfx::handle::DepthStencilView<gfx_device_gl::Resources, Depth>,
@@ -92,6 +89,9 @@ struct App {
         gfx_device_gl::Factory,
         pipe = trianglepipe
     ),
+    gl_surface: Surface<WindowSurface>,
+    gl_context: PossiblyCurrentContext,
+    window: Window,
 }
 
 impl App {
