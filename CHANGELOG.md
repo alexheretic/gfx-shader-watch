@@ -1,3 +1,6 @@
+# 0.6.4
+* Update _notify_ to 8.
+
 # 0.6.3
 * Update _notify_ to 7.
 

@@ -1,6 +1,6 @@
 [package]
 name = "gfx_shader_watch"
-version = "0.6.3"
+version = "0.6.4"
 authors = ["Alex Butler <alexheretic@gmail.com>"]
 edition = "2021"
 description = "GFX Utility for watching shaders and reloading pipeline state on the fly"
@@ -11,7 +11,7 @@ license = "Apache-2.0"
 [dependencies]
 gfx = "0.18.3"
 log = "0.4"
-notify = "7"
+notify = "8"
 
 [dev-dependencies]
 env_logger = "0.11"
