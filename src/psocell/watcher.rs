@@ -149,7 +149,7 @@ impl<I: pso::PipelineInit + Clone> WatcherPsoCellBuilder<I> {
             let vs_dir = vs.parent().unwrap_or(vs);
             let fs_dir = fs.parent().unwrap_or(fs);
 
-            debug!("Watching {:?}", &[vs, fs]);
+            debug!("Watching {:?}", [vs, fs]);
             watcher.watch(vs_dir, notify::RecursiveMode::NonRecursive)?;
             if fs_dir != vs_dir {
                 watcher.watch(fs_dir, notify::RecursiveMode::NonRecursive)?;
